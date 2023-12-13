@@ -1,7 +1,8 @@
-// ignore_for_file: file_names, use_build_context_synchronously
+// ignore_for_file: file_names, use_build_context_synchronously, await_only_futures, avoid_print
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+// import 'package:jwtson/jwtson.dart';
 
 import '../Home_View.dart';
 
@@ -17,6 +18,7 @@ class FormWidget extends StatefulWidget {
 class _FormWidgetState extends State<FormWidget> {
   late String email, password;
   final _formKey = GlobalKey<FormState>();
+  // final _jwt = Jwtson();
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +58,16 @@ class _FormWidgetState extends State<FormWidget> {
                   if (_formKey.currentState!.validate()) {
                     _formKey.currentState?.save();
                     UserCredential? credential = await login(email, password);
+
                     if (credential != null) {
                       if (credential.user != null) {
-                        // if (credential.user!.emailVerified) {
+                        String token =
+                            await credential.user!.getIdToken() as String;
+                        print(token);
+                        // if (credential.user!.emailVerified) { Validacion para verificacion de usario por correo
+
+                        // final token = await _jwt
+
                         Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
